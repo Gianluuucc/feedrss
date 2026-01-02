@@ -108,14 +108,18 @@ def feed():
     xml += '<description>Feed RSS generato automaticamente</description>\n'
     
     for item in news_items:
+        # Clean title and description to remove invalid XML characters
+        title_clean = item["title"].replace(']]>', ']]&gt;')
+        desc_clean = item["description"].replace(']]>', ']]&gt;')
+        
         xml += '<item>\n'
-        xml += f'<title><![CDATA[{item["title"]}]]></title>\n'
+        xml += f'<title><![CDATA[{title_clean}]]></title>\n'
         xml += f'<link>{item["link"]}</link>\n'
         xml += f'<guid>{item["link"]}</guid>\n'
         # Format date for RSS
         pub_date = format_datetime(item['pubDate'])
         xml += f'<pubDate>{pub_date}</pubDate>\n'
-        xml += f'<description><![CDATA[{item["description"]}]]></description>\n'
+        xml += f'<description><![CDATA[{desc_clean}]]></description>\n'
         xml += '</item>\n'
         
     xml += '</channel>\n'

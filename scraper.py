@@ -66,6 +66,8 @@ def get_news(url):
                             continue
                             
                         title = re.sub(r'\s+', ' ', title)
+                        # Remove control characters that are invalid in XML
+                        title = "".join(ch for ch in title if (0x20 <= ord(ch) <= 0xD7FF) or (0xE000 <= ord(ch) <= 0xFFFD) or (0x10000 <= ord(ch) <= 0x10FFFF) or ch in '\t\n\r')
                         
                         news_items.append({
                             'title': title,
