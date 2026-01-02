@@ -18,8 +18,7 @@ def get_local_ip():
 
 @app.route('/')
 def index():
-    local_ip = get_local_ip()
-    suggested_base = f"http://{local_ip}:5000"
+    suggested_base = request.host_url.rstrip('/')
     
     return render_template_string('''
         <!doctype html>
