@@ -4,6 +4,13 @@ from urllib.parse import urljoin, urlparse
 import re
 from datetime import datetime
 
+def clean_text(text):
+    if not text:
+        return ""
+    text = re.sub(r'\s+', ' ', text)
+    # Remove control characters that are invalid in XML
+    return "".join(ch for ch in text if (0x20 <= ord(ch) <= 0xD7FF) or (0xE000 <= ord(ch) <= 0xFFFD) or (0x10000 <= ord(ch) <= 0x10FFFF) or ch in '\t\n\r')
+
 def get_news(url):
     print(f"Scraping URL: {url}")
     try:
@@ -65,9 +72,7 @@ def get_news(url):
                         if not title:
                             continue
                             
-                        title = re.sub(r'\s+', ' ', title)
-                        # Remove control characters that are invalid in XML
-                        title = "".join(ch for ch in title if (0x20 <= ord(ch) <= 0xD7FF) or (0xE000 <= ord(ch) <= 0xFFFD) or (0x10000 <= ord(ch) <= 0x10FFFF) or ch in '\t\n\r')
+                        title = clean_text(title)
                         
                         news_items.append({
                             'title': title,
@@ -96,6 +101,7 @@ def get_news(url):
                         
                         title = link_tag.get_text(strip=True)
                         if title:
+                            title = clean_text(title)
                             news_items.append({
                                 'title': title,
                                 'link': link,
